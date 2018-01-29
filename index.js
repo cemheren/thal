@@ -46,30 +46,55 @@ async function run() {
   const PASSWORD_SELECTOR = '#i0118';
   const NEXTBUTTON_SELECTOR = '#idSIButton9';
   
-  await page.goto('https://portal.azure.com/#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Overview');
-  await page.waitFor(2*1000);
-
-  await page.click(USERNAME_SELECTOR);
-  await page.keyboard.type("cemheren@gmail.com");
-
-  await page.waitFor(100);
+  //await page.goto('https://portal.azure.com/#blade/Microsoft_Azure_Policy/PolicyMenuBlade/Overview');
   
-  await page.click(NEXTBUTTON_SELECTOR);
-  await page.waitFor(3*1000);
+  //await page.goto('https://example.com');
+  await page._client.send('DOM.enable');
+  await page._client.send('CSS.enable');
+  const doc = await page._client.send('DOM.getDocument');
+  const nodes = await page._client.send('DOM.querySelectorAll', {
+      nodeId: doc.root.nodeId,
+      selector: '*'
+  });
+  const stylesForNodes = []
+  for (id of nodes.nodeIds) {
+    stylesForNodes.push(await page._client.send('CSS.getMatchedStylesForNode', {nodeId: id}));
+  }
+  //await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'})
+  //await page.addScriptTag({path: "./bla.js"})
 
-  await page.click(PASSWORD_SELECTOR);
-  await page.keyboard.type("");
+  // await page.waitFor(2*1000);
 
-  await page.click(NEXTBUTTON_SELECTOR);
-  await page.waitFor(3*1000);
+  // await page.click(USERNAME_SELECTOR);
+  // await page.keyboard.type("cemheren@gmail.com");
 
-  await page.click(NEXTBUTTON_SELECTOR);
-  await page.waitFor(20*1000);
+  // await page.waitFor(100);
+  
+  // await page.click(NEXTBUTTON_SELECTOR);
+  // await page.waitFor(3*1000);
 
-  // we are at the overview blade
-  await page.screenshot({ path: 'screenshots/overview.png' });
+  // await page.click(PASSWORD_SELECTOR);
+  // await page.keyboard.type("");
 
-  await browser.close();
+  // await page.click(NEXTBUTTON_SELECTOR);
+  // await page.waitFor(3*1000);
+
+  // await page.click(NEXTBUTTON_SELECTOR);
+  // await page.waitFor(10*1000);
+
+  // // we are at the overview blade
+  // await page.screenshot({ path: 'screenshots/overview.png' });
+
+  //await page.goto('https://www.example.com');
+    
+  await page.exposeFunction('screenshot', i =>
+    page.screenshot({ path: 'screenshots/overview' + i +'.png' })
+  );
+
+  //await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'})
+  await page.addScriptTag({path: "./bla.js"})
+
+  //await browser.close();
 };
  
 run();
