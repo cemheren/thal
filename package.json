@@ -26,5 +26,8 @@
   "dependencies": {
     "mongoose": "^4.11.8",
     "puppeteer": "git+https://github.com/GoogleChrome/puppeteer.git"
+  },
+  "bin":{
+    "script":"index.js"
   }
 }
